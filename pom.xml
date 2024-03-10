@@ -119,7 +119,7 @@
                         <icon>${project.basedir}/package/macosx/mybatis-generator-gui.icns</icon>
                     </bundleArguments>
                     <mainClass>com.taurus.mybatis.generator.MainUI</mainClass>
-                    <vendor>Owen Zou</vendor>
+                    <vendor>Taurus</vendor>
                     <verbose>false</verbose>
                     <jfxMainAppJarName>mybatis-generator-gui.jar</jfxMainAppJarName>
                     <needShortcut>true</needShortcut>

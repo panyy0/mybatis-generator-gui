@@ -190,6 +190,12 @@ public class MybatisGeneratorBridge {
         serializablePluginConfiguration.setConfigurationType("org.mybatis.generator.plugins.SerializablePlugin");
         context.addPluginConfiguration(serializablePluginConfiguration);
 
+        // 额外生成 mapperExt和 mapperExt.xml
+        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
+        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+        context.addPluginConfiguration(mapperExtPlugin);
+
         // Lombok 插件
         if (generatorConfig.isUseLombokPlugin()) {
             PluginConfiguration pluginConfiguration = new PluginConfiguration();

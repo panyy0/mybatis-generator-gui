@@ -49,7 +49,7 @@
 }
 
 .consoleTextArea {
-	-fx-stroke: white;
+	-fx-stroke: black;
 	-fx-fill: black;
 	-fx-background-color: black;
 }

@@ -1,15 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.zzg</groupId>
+    <groupId>com.taurus</groupId>
     <artifactId>mybatis-generator-gui</artifactId>
-    <version>0.8.9-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <!-- Java 11请修改此处为11 -->
         <java.version>1.8</java.version>
     </properties>
 
@@ -112,7 +111,7 @@
                         <!-- mac打包开启-->
                         <icon>${project.basedir}/package/macosx/mybatis-generator-gui.icns</icon>
                     </bundleArguments>
-                    <mainClass>com.zzg.mybatis.generator.MainUI</mainClass>
+                    <mainClass>com.taurus.mybatis.generator.MainUI</mainClass>
                     <vendor>Owen Zou</vendor>
                     <verbose>false</verbose>
                     <jfxMainAppJarName>mybatis-generator-gui.jar</jfxMainAppJarName>

@@ -21,8 +21,10 @@ import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.config.GeneratedKey;
 import org.mybatis.generator.internal.util.StringUtility;
 
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -127,10 +129,9 @@ public class DbRemarksCommentGenerator implements CommentGenerator {
             IntrospectedColumn introspectedColumn) {
         if (StringUtility.stringHasValue(introspectedColumn.getRemarks())) {
             field.addJavaDocLine("/**");
-            StringBuilder sb = new StringBuilder();
-            sb.append(" * ");
-            sb.append(introspectedColumn.getRemarks());
-            field.addJavaDocLine(sb.toString());
+            String sb = " * " +
+                    introspectedColumn.getRemarks();
+            field.addJavaDocLine(sb);
             field.addJavaDocLine(" */");
         }
 
@@ -148,13 +149,22 @@ public class DbRemarksCommentGenerator implements CommentGenerator {
                 field.addAnnotation("@NotEmpty");
             }
             if (introspectedColumn.isIdentity()) {
-                if (introspectedTable.getTableConfiguration().getGeneratedKey().getRuntimeSqlStatement().equals("JDBC")) {
-                    field.addAnnotation("@GeneratedValue(generator = \"JDBC\")");
-                } else {
-                    field.addAnnotation("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                Optional<GeneratedKey> optionalGeneratedKey = introspectedTable.getTableConfiguration().getGeneratedKey();
+                if (optionalGeneratedKey.isPresent()) {
+                    GeneratedKey generatedKey = optionalGeneratedKey.get();
+                    if (generatedKey.getRuntimeSqlStatement().equals("JDBC")) {
+                        field.addAnnotation("@GeneratedValue(generator = \"JDBC\")");
+                    } else {
+                        field.addAnnotation("@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                    }
                 }
+
             } else if (introspectedColumn.isSequenceColumn()) {
-                field.addAnnotation("@SequenceGenerator(name=\"\",sequenceName=\"" + introspectedTable.getTableConfiguration().getGeneratedKey().getRuntimeSqlStatement() + "\")");
+                Optional<GeneratedKey> optionalGeneratedKey = introspectedTable.getTableConfiguration().getGeneratedKey();
+                if (optionalGeneratedKey.isPresent()) {
+                    GeneratedKey generatedKey = optionalGeneratedKey.get();
+                    field.addAnnotation("@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = \"" + generatedKey.getRuntimeSqlStatement() + "\")");
+                }
             }
         }
     }

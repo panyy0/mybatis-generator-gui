@@ -6,6 +6,8 @@ import com.taurus.mybatis.generator.model.GeneratorConfig;
 import com.taurus.mybatis.generator.plugins.DbRemarksCommentGenerator;
 import com.taurus.mybatis.generator.util.ConfigHelper;
 import com.taurus.mybatis.generator.util.DbUtil;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.ProgressCallback;
@@ -25,10 +27,7 @@ import static org.apache.commons.lang3.CharEncoding.UTF_8;
 import static org.mybatis.generator.config.PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING;
 
 /**
- * The bridge between GUI and the mybatis generator. All the operation to  mybatis generator should proceed through this
- * class
- * <p>
- * Created by Owen on 6/30/16.
+ * 使用桥接模式封装MybatisGenerator
  */
 public class MybatisGeneratorBridge {
 
@@ -56,12 +55,10 @@ public class MybatisGeneratorBridge {
     }
 
     public void generate() throws Exception {
-        // todo
         Configuration configuration = new Configuration();
         Context context = new Context(ModelType.CONDITIONAL);
         configuration.addContext(context);
 		
-//        context.addProperty("javaFileEncoding", "UTF-8");
         context.addProperty(CONTEXT_JAVA_FILE_ENCODING, UTF_8);
 
 		String dbType = selectedDatabaseConfig.getDbType();
@@ -158,7 +155,7 @@ public class MybatisGeneratorBridge {
         SqlMapGeneratorConfiguration mapperConfig = new SqlMapGeneratorConfiguration();
         mapperConfig.setTargetPackage(generatorConfig.getMappingXMLPackage());
         mapperConfig.setTargetProject(generatorConfig.getProjectFolder() + "/" + generatorConfig.getMappingXMLTargetFolder());
-        // DAO
+        // mapper
         JavaClientGeneratorConfiguration daoConfig = new JavaClientGeneratorConfiguration();
         daoConfig.setConfigurationType("XMLMAPPER");
         daoConfig.setTargetPackage(generatorConfig.getDaoPackage());
@@ -190,76 +187,27 @@ public class MybatisGeneratorBridge {
         serializablePluginConfiguration.setConfigurationType("org.mybatis.generator.plugins.SerializablePlugin");
         context.addPluginConfiguration(serializablePluginConfiguration);
 
-        // 额外生成 mapperExt和 mapperExt.xml
-        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
-        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-        context.addPluginConfiguration(mapperExtPlugin);
-
         // Lombok 插件
         if (generatorConfig.isUseLombokPlugin()) {
             PluginConfiguration pluginConfiguration = new PluginConfiguration();
-            pluginConfiguration.addProperty("type", "com.softwareloop.mybatis.generator.plugins.LombokPlugin");
-            pluginConfiguration.setConfigurationType("com.softwareloop.mybatis.generator.plugins.LombokPlugin");
+            pluginConfiguration.addProperty("type", "com.taurus.mybatis.generator.plugins.LombokPlugin");
+            pluginConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.LombokPlugin");
             context.addPluginConfiguration(pluginConfiguration);
         }
-        // toString, hashCode, equals插件
-        else if (generatorConfig.isNeedToStringHashcodeEquals()) {
-            PluginConfiguration pluginConfiguration1 = new PluginConfiguration();
-            pluginConfiguration1.addProperty("type", "org.mybatis.generator.plugins.EqualsHashCodePlugin");
-            pluginConfiguration1.setConfigurationType("org.mybatis.generator.plugins.EqualsHashCodePlugin");
-            context.addPluginConfiguration(pluginConfiguration1);
-            PluginConfiguration pluginConfiguration2 = new PluginConfiguration();
-            pluginConfiguration2.addProperty("type", "org.mybatis.generator.plugins.ToStringPlugin");
-            pluginConfiguration2.setConfigurationType("org.mybatis.generator.plugins.ToStringPlugin");
-            context.addPluginConfiguration(pluginConfiguration2);
-        }
-        // limit/offset插件
-        if (generatorConfig.isOffsetLimit()) {
-            if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)
-		            || DbType.PostgreSQL.name().equals(dbType)) {
-                PluginConfiguration pluginConfiguration = new PluginConfiguration();
-                pluginConfiguration.addProperty("type", "com.taurus.mybatis.generator.plugins.MySQLLimitPlugin");
-                pluginConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.MySQLLimitPlugin");
-                context.addPluginConfiguration(pluginConfiguration);
-            }
-        }
+
         //for JSR310
         if (generatorConfig.isJsr310Support()) {
             JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
             javaTypeResolverConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.JavaTypeResolverJsr310Impl");
             context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
         }
-        //forUpdate 插件
-        if(generatorConfig.isNeedForUpdate()) {
-            if (DbType.MySQL.name().equals(dbType)
-                    || DbType.PostgreSQL.name().equals(dbType)) {
-                PluginConfiguration pluginConfiguration = new PluginConfiguration();
-                pluginConfiguration.addProperty("type", "com.taurus.mybatis.generator.plugins.MySQLForUpdatePlugin");
-                pluginConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.MySQLForUpdatePlugin");
-                context.addPluginConfiguration(pluginConfiguration);
-            }
-        }
-        //repository 插件
-        if(generatorConfig.isAnnotationDAO()) {
-            if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)
-                    || DbType.PostgreSQL.name().equals(dbType)) {
-                PluginConfiguration pluginConfiguration = new PluginConfiguration();
-                pluginConfiguration.addProperty("type", "com.taurus.mybatis.generator.plugins.RepositoryPlugin");
-                pluginConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.RepositoryPlugin");
-                context.addPluginConfiguration(pluginConfiguration);
-            }
-        }
-        if (generatorConfig.isUseDAOExtendStyle()) {
-            if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)
-                    || DbType.PostgreSQL.name().equals(dbType)) {
-                PluginConfiguration pluginConfiguration = new PluginConfiguration();
-				pluginConfiguration.addProperty("useExample", String.valueOf(generatorConfig.isUseExample()));
-				pluginConfiguration.addProperty("type", "com.taurus.mybatis.generator.plugins.CommonDAOInterfacePlugin");
-                pluginConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.CommonDAOInterfacePlugin");
-                context.addPluginConfiguration(pluginConfiguration);
-            }
-        }
+
+
+        // 额外生成 mapperExt和 mapperExt.xml
+        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
+        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+        context.addPluginConfiguration(mapperExtPlugin);
 
         context.setTargetRuntime("MyBatis3");
 

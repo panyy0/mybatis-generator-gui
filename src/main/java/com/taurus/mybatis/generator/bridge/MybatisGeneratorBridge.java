@@ -138,7 +138,7 @@ public class MybatisGeneratorBridge {
         if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)) {
 	        jdbcConfig.addProperty("nullCatalogMeansCurrent", "true");
 	        // useInformationSchema可以拿到表注释，从而生成类注释可以使用表的注释
-	        jdbcConfig.addProperty("useInformationSchema", "true");
+            jdbcConfig.addProperty("useInformationSchema", "true");
         }
         jdbcConfig.setDriverClass(DbType.valueOf(dbType).getDriverClass());
         jdbcConfig.setConnectionURL(DbUtil.getConnectionUrlWithSchema(selectedDatabaseConfig));
@@ -160,7 +160,6 @@ public class MybatisGeneratorBridge {
         daoConfig.setConfigurationType("XMLMAPPER");
         daoConfig.setTargetPackage(generatorConfig.getDaoPackage());
         daoConfig.setTargetProject(generatorConfig.getProjectFolder() + "/" + generatorConfig.getDaoTargetFolder());
-
 
         context.setId("myid");
         context.addTableConfiguration(tableConfig);
@@ -204,10 +203,10 @@ public class MybatisGeneratorBridge {
 
 
         // 额外生成 mapperExt和 mapperExt.xml
-        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
-        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-        context.addPluginConfiguration(mapperExtPlugin);
+//        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
+//        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+//        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
+//        context.addPluginConfiguration(mapperExtPlugin);
 
         context.setTargetRuntime("MyBatis3");
 
@@ -217,13 +216,19 @@ public class MybatisGeneratorBridge {
         ShellCallback shellCallback = new DefaultShellCallback(true); // override=true
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(configuration, shellCallback, warnings);
         // if overrideXML selected, delete oldXML ang generate new one
-		if (generatorConfig.isOverrideXML()) {
+		/*if (generatorConfig.isOverrideXML()) {
 			String mappingXMLFilePath = getMappingXMLFilePath(generatorConfig);
 			File mappingXMLFile = new File(mappingXMLFilePath);
 			if (mappingXMLFile.exists()) {
 				mappingXMLFile.delete();
 			}
-		}
+		}*/
+        // 直接覆盖源文件
+        String mappingXMLFilePath = getMappingXMLFilePath(generatorConfig);
+        File mappingXMLFile = new File(mappingXMLFilePath);
+        if (mappingXMLFile.exists()) {
+            mappingXMLFile.delete();
+        }
         myBatisGenerator.generate(progressCallback, contexts, fullyqualifiedTables);
     }
 

@@ -382,6 +382,7 @@ public class MainUIController extends BaseFXController {
         generatorConfig.setUseLombokPlugin(true);
         generatorConfig.setEncoding(encodingChoice.getValue());
         generatorConfig.setUseExample(true);
+        generatorConfig.setJsr310Support(true);
         return generatorConfig;
     }
 

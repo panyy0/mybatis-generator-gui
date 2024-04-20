@@ -68,6 +68,8 @@ public class GeneratorConfig {
 
     private boolean jsr310Support;
 
+	private boolean convertLongVarchar;
+
     public boolean isJsr310Support() {
         return jsr310Support;
     }
@@ -294,5 +296,13 @@ public class GeneratorConfig {
 
 	public boolean isUseDAOExtendStyle() {
 		return useDAOExtendStyle;
+	}
+
+	public void setConvertLongVarchar(boolean convertLongVarchar) {
+		this.convertLongVarchar = convertLongVarchar;
+	}
+
+	public boolean getConvertLongVarchar() {
+		return this.convertLongVarchar;
 	}
 }

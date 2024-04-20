@@ -383,6 +383,7 @@ public class MainUIController extends BaseFXController {
         generatorConfig.setEncoding(encodingChoice.getValue());
         generatorConfig.setUseExample(true);
         generatorConfig.setJsr310Support(true);
+        generatorConfig.setConvertLongVarchar(true);
         return generatorConfig;
     }
 

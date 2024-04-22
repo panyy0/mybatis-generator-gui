@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.taurus</groupId>
     <artifactId>mybatis-generator-gui</artifactId>
-    <version>1.1.0</version>
+    <version>${revision}</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -11,6 +11,7 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>1.8</java.version>
         <lombok.version>1.18.28</lombok.version>
+        <revision>1.1.0</revision>
     </properties>
 
     <dependencies>

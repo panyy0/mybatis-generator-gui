@@ -16,6 +16,12 @@ import java.util.Objects;
  */
 public class JavaTypeResolverJsr310Impl extends JavaTypeResolverDefaultImpl {
 
+    /**
+     * 对应类型转换
+     * @param column
+     * @param defaultType
+     * @return
+     */
     @Override
     protected FullyQualifiedJavaType overrideDefaultType(IntrospectedColumn column, FullyQualifiedJavaType defaultType) {
         FullyQualifiedJavaType answer = defaultType;
@@ -44,6 +50,12 @@ public class JavaTypeResolverJsr310Impl extends JavaTypeResolverDefaultImpl {
         return answer;
     }
 
+    /**
+     * text 类型不生成blob resultMap
+     * @param introspectedColumn
+     *            the column whose Java type needs to be calculated
+     * @return
+     */
     @Override
     public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
         FullyQualifiedJavaType qualifiedJavaType = null;

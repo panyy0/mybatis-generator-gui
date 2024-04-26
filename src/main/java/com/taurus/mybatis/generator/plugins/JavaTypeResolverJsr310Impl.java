@@ -8,6 +8,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * @author hanakei
@@ -41,5 +42,25 @@ public class JavaTypeResolverJsr310Impl extends JavaTypeResolverDefaultImpl {
         }
 
         return answer;
+    }
+
+    @Override
+    public FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn) {
+        FullyQualifiedJavaType qualifiedJavaType = null;
+        JdbcTypeInformation jdbcTypeInformation;
+        // 如果是 text或者longtext，转换为varchar
+        if (Types.LONGVARCHAR == introspectedColumn.getJdbcType()) {
+            introspectedColumn.setJdbcType(Types.VARCHAR);
+            jdbcTypeInformation = typeMap.get(Types.VARCHAR);
+        }
+        // 其他类型不修改
+        else {
+            jdbcTypeInformation = typeMap.get(introspectedColumn.getJdbcType());
+        }
+        if (Objects.nonNull(jdbcTypeInformation)) {
+            qualifiedJavaType = jdbcTypeInformation.getFullyQualifiedJavaType();
+            qualifiedJavaType = overrideDefaultType(introspectedColumn, qualifiedJavaType);
+        }
+        return qualifiedJavaType;
     }
 }

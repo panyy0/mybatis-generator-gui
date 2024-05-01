@@ -209,11 +209,11 @@ public class MybatisGeneratorBridge {
         }
 
 
-        // 额外生成 mapperExt和 mapperExt.xml
-//        PluginConfiguration mapperExtPlugin = new PluginConfiguration();
-//        mapperExtPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-//        mapperExtPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.MapperExtPlugin");
-//        context.addPluginConfiguration(mapperExtPlugin);
+        // 生成批量插入和批量更新操作
+        PluginConfiguration customBatchPlugin = new PluginConfiguration();
+        customBatchPlugin.addProperty("type", "com.taurus.mybatis.generator.plugins.CustomBatchPlugin");
+        customBatchPlugin.setConfigurationType("com.taurus.mybatis.generator.plugins.CustomBatchPlugin");
+        context.addPluginConfiguration(customBatchPlugin);
 
         context.setTargetRuntime("MyBatis3");
 

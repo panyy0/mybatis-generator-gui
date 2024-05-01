@@ -201,12 +201,12 @@ public class MybatisGeneratorBridge {
             context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
         }
 
-        // for longvarchar convert
+     /*   // for longvarchar convert
         if (generatorConfig.isJsr310Support()) {
             JavaTypeResolverConfiguration javaTypeResolverConfiguration = new JavaTypeResolverConfiguration();
             javaTypeResolverConfiguration.setConfigurationType("com.taurus.mybatis.generator.plugins.BlobTypeConvertResolver");
             context.setJavaTypeResolverConfiguration(javaTypeResolverConfiguration);
-        }
+        }*/
 
 
         // 生成批量插入和批量更新操作

@@ -14,6 +14,7 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 
@@ -31,11 +32,14 @@ public class CustomBatchPlugin extends PluginAdapter {
     public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
         List<Method> methods = interfaze.getMethods();
 
-        Method method1 = methods.get(0);
-
-        Method batchUpdateMethod = copyProperties(method1, "batchUpdate");
-        Method batchUpdateSelectiveMethod = copyProperties(method1, "batchUpdateSelective");
-        Method batchInsertMethod = copyProperties(method1, "batchInsert");
+        Optional<Method> methodOptional = methods.stream().filter(method -> "selectByExample".equals(method.getName())).findFirst();
+        if (!methodOptional.isPresent()) {
+            return false;
+        }
+        Method method = methodOptional.get();
+        Method batchUpdateMethod = copyProperties(method, "batchUpdate");
+        Method batchUpdateSelectiveMethod = copyProperties(method, "batchUpdateSelective");
+        Method batchInsertMethod = copyProperties(method, "batchInsert");
 
         interfaze.addMethod(batchUpdateMethod);
         interfaze.addMethod(batchUpdateSelectiveMethod);
@@ -251,7 +255,6 @@ public class CustomBatchPlugin extends PluginAdapter {
 
     private Method copyProperties(Method source, String name) {
         Method method = new Method(name);
-        method.setReturnType(source.getReturnType().get());
         method.setConstructor(source.isConstructor());
         method.setDefault(source.isDefault());
         method.setNative(source.isNative());
@@ -259,13 +262,18 @@ public class CustomBatchPlugin extends PluginAdapter {
         method.setFinal(source.isFinal());
         method.setStatic(source.isStatic());
         method.setVisibility(source.getVisibility());
-        addParameter(method);
+        method.setAbstract(source.isAbstract());
+        // 入参
+        addParameter(method, source);
+        // 返回值
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         return method;
     }
 
-    private void addParameter(Method method) {
+    private void addParameter(Method method, Method source) {
         method.getParameters().clear();
-        method.addParameter(new Parameter(new FullyQualifiedJavaType("List<Model>"), "list"));
+        Optional<FullyQualifiedJavaType> returnType = source.getReturnType();
+        returnType.ifPresent(fullyQualifiedJavaType -> method.addParameter(new Parameter(fullyQualifiedJavaType, "list")));
     }
 
 }

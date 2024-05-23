@@ -31,7 +31,7 @@ public class MainUI extends Application {
 		Parent root = fxmlLoader.load();
 		primaryStage.setResizable(true);
 		primaryStage.setScene(new Scene(root));
-		primaryStage.setTitle("【塔思】Mybatis逆向工程生成器v2.0.0");
+		primaryStage.setTitle("【塔思】Mybatis逆向工程生成器v2.0.1");
 		Image imageIcon = new Image("icons/mybatis-logo.png");
 		primaryStage.getIcons().add(imageIcon);
 		primaryStage.show();

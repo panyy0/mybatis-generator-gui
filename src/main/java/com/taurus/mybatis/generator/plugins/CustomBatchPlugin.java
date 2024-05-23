@@ -176,6 +176,9 @@ public class CustomBatchPlugin extends PluginAdapter {
         answer.addAttribute(new Attribute("id", "batchInsert"));
 
         answer.addAttribute(new Attribute("parameterType", "java.util.List"));
+        // 返回主键ID
+        answer.addAttribute(new Attribute("useGeneratedKeys", "true"));
+        answer.addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
 
         StringBuilder insertClause = new StringBuilder();
 

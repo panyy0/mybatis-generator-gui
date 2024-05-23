@@ -69,6 +69,7 @@ public class MybatisGeneratorBridge {
         TableConfiguration tableConfig = new TableConfiguration(context);
         tableConfig.setTableName(generatorConfig.getTableName());
         tableConfig.setDomainObjectName(generatorConfig.getDomainObjectName());
+        tableConfig.setGeneratedKey(new GeneratedKey("id", "Mysql", true, null));
         if(!generatorConfig.isUseExample()) {
             tableConfig.setUpdateByExampleStatementEnabled(false);
             tableConfig.setCountByExampleStatementEnabled(false);

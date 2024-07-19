@@ -65,6 +65,11 @@ public class JavaTypeResolverJsr310Impl extends JavaTypeResolverDefaultImpl {
             introspectedColumn.setJdbcType(Types.VARCHAR);
             jdbcTypeInformation = typeMap.get(Types.VARCHAR);
         }
+        // INT UNSIGNED 的范围超过了 Integer，转换为 Long
+        else if (Types.INTEGER == introspectedColumn.getJdbcType() && "INT UNSIGNED".equalsIgnoreCase(introspectedColumn.getActualTypeName())) {
+            introspectedColumn.setJdbcType(Types.BIGINT);
+            jdbcTypeInformation = typeMap.get(Types.BIGINT);
+        }
         // 其他类型不修改
         else {
             jdbcTypeInformation = typeMap.get(introspectedColumn.getJdbcType());

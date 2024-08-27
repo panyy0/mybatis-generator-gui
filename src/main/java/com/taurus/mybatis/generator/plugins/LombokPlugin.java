@@ -158,8 +158,8 @@ public class LombokPlugin extends PluginAdapter {
 
         //@Data is default annotation
         annotations.add(Annotations.DATA);
-        annotations.add(Annotations.TO_STRING);
-        annotations.add(Annotations.EQUALS_AND_HASHCODE);
+//        annotations.add(Annotations.TO_STRING);
+//        annotations.add(Annotations.EQUALS_AND_HASHCODE);
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             boolean isEnable = Boolean.parseBoolean(entry.getValue().toString());
 

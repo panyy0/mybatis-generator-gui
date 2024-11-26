@@ -112,7 +112,7 @@ public class CustomBatchPlugin extends PluginAdapter {
             secondTrimElement.addAttribute(new Attribute("prefix", sb.toString()));
             secondTrimElement.addAttribute(new Attribute("suffix", "end,"));
 
-            XmlElement foreachElement = new XmlElement(getForeach());
+            XmlElement foreachElement = new XmlElement("foreach");
             foreachElement.addAttribute(new Attribute("collection", "list"));
             foreachElement.addAttribute(new Attribute("index", "id"));
             foreachElement.addAttribute(new Attribute("item", "item"));
@@ -168,10 +168,6 @@ public class CustomBatchPlugin extends PluginAdapter {
         answer.addElement(valuesTrimElement);
 
         parentElement.addElement(answer);
-    }
-
-    private static String getForeach() {
-        return "foreach";
     }
 
     private void addBatchInsertElements(XmlElement parentElement, IntrospectedTable introspectedTable) {

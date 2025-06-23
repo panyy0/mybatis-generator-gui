@@ -106,7 +106,7 @@ public class CustomBatchPlugin extends PluginAdapter {
             }
 
             sb.setLength(0);
-            sb.append(introspectedColumn.getJavaProperty());
+            sb.append(introspectedColumn.getActualColumnName());
             sb.append(" = case"); //$NON-NLS-1$
             XmlElement secondTrimElement = new XmlElement("trim");
             secondTrimElement.addAttribute(new Attribute("prefix", sb.toString()));
